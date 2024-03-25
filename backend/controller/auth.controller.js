@@ -78,7 +78,7 @@ const LoginUser = async (req, res) => {
             }
         }
                 
-        jwt.sign(payload, 'secretToken', { expiresIn: 3600 }, (err, token) => { //jwt.sign() library takes three main parameters: payload(The data to be included in the token.), secretToken(This is a secret key used to sign the token.), expiresIn(This is an optional parameter specifying the expiration time of the token.)
+        jwt.sign(payload, process.env.SECRET_TOKEN, { expiresIn: 3600 }, (err, token) => { //jwt.sign() library takes three main parameters: payload(The data to be included in the token.), secretToken(This is a secret key used to sign the token.), expiresIn(This is an optional parameter specifying the expiration time of the token.)
             if(err){
                 throw err;
             }
