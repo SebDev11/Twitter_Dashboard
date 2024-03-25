@@ -1,6 +1,6 @@
 # MERN CRUD and Authentication Project
 
-This is a project developed for teaching purposes in the Year 2 Semester 2. It demonstrates basic CRUD operations along with user authentication using the MERN stack (MongoDB, Express.js, React.js, Node.js).
+This is a project developed to teaching purposes for the Year 2 Semester 2 students. It demonstrates basic CRUD operations along with user authentication using the MERN stack (MongoDB, Express.js, React.js, Node.js).
 
 ## Project Structure
 
