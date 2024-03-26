@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 //import css file
 import './AllItems.css'
 
-const AllItems = () => {
+const AllItems = ({ token, setToken }) => {
+
+    const navigate = useNavigate();
 
     const [ allItems, setAllItems ] = useState([]);
 
@@ -15,7 +18,7 @@ const AllItems = () => {
 
             try{
 
-                await axios.get('http://localhost:8000/api/items')
+                await axios.get('http://localhost:8000/api/items', {headers: { Authorization: token },})
                 .then((res) => {
                     setAllItems(res.data.AllItems);
                     console.log(res.data.message);
@@ -31,15 +34,25 @@ const AllItems = () => {
 
         }
 
-        getAllItems(); // This line calls the getAllItems() function when the component mounts | mounts means when component start
+        if(token){
+            getAllItems(); // This line calls the getAllItems() function when the component mounts | mounts means when component start
+        }
 
     }, []) //The empty dependency array ([]) as the second argument to useEffect indicates that this effect should only run once when the component mounts.
+
+
+    const handleLogout = async () => {
+        localStorage.removeItem('token'); // Remove token from local storage
+        await setToken(null); // Clear token from state
+        navigate('/'); 
+    }
 
   return (
     <div className="allItemscontainer">
 
         <div className="addItemBtnDiv">
             <Link to='/createform'><button type="button" class="btn btn-success addItemBtn">Add Item</button></Link>
+            <button onClick={handleLogout} type="button" class="btn btn-danger addItemBtn">Logout</button>
         </div>
         
         <table className="table">

@@ -4,7 +4,7 @@ import axios from 'axios';
 //importing CSS files
 import './CreateForm.css'
 
-const CreateForm = () => {
+const CreateForm = ({ token }) => {
 
     const [itemName, setItemName] = useState('');
     const [itemCategory, setItemCategory] = useState('');
@@ -21,9 +21,10 @@ const CreateForm = () => {
                 itemCategory: itemCategory,
                 itemQty: itemQty,
                 itemDescription: itemDescription,
+                user: token.userId,
             }
     
-            axios.post('http://localhost:8000/api/create', newItemData)
+            axios.post('http://localhost:8000/api/create', newItemData, {headers: {Authorization: token},})
             .then((res) => {
                 alert(res.data.message);
                 console.log(res.data.status);

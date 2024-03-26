@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 //import css file
 import './Register.css'
 
-const Register = () => {
+const Register = ({ setToken }) => {
 
     const navigate = useNavigate(); //Initialize navigate function.
 
@@ -33,11 +33,12 @@ const Register = () => {
         try{
 
             await axios.post('http://localhost:8000/api/auth/register', newUserData)
-            .then((res) => {
+            .then(async (res) => {
+                await setToken(res.data.token)
                 alert(res.data.message);
                 console.log(res.data);
 
-                navigate('/');
+                navigate('/dashboard');
             })
             .catch((err) => {
                 console.log("☠️ :: Error on API URL or newUserData object : " + err.message);

@@ -34,10 +34,24 @@ const RegisterUser = async (req, res) => {
         // User save to DB
         await user.save();
 
-        return res.status(200).send({
-            status: true,
-            message: "✨ :: User registered successfuly!",
-        })
+        // Generate JWT
+        const payload = {
+            user: {
+                id: user._id
+            }
+        };
+
+        jwt.sign(payload, process.env.SECRET_TOKEN, { expiresIn: 3600 }, (err, token) => {
+            if (err) {
+                throw err;
+            }
+            // Send token in response upon successful registration
+            res.status(200).json({
+                status: true,
+                token: token,
+                message: "✨ :: User registered successfully!",
+            });
+        });
 
     }catch(err){
         return res.status(500).send({
@@ -74,7 +88,7 @@ const LoginUser = async (req, res) => {
         // Generate JWT
         const payload = { //This payload typically contains information about the user. In this case, it includes the user's id.
             user: {
-                id: user.id
+                id: user._id
             }
         }
                 

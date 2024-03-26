@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ setToken }) => {
 
     const navigate = useNavigate(); //Initialize navigate function.
 
@@ -24,12 +24,13 @@ const Login = () => {
         try{
 
             await axios.post('http://localhost:8000/api/auth/login', UserData)
-            .then((res) => {
+            .then(async (res) => {
+                await setToken(res.data.token);
                 alert(res.data.message);
                 console.log(res.data);
-                console.log(res.data.messg);
+                console.log(res.data.message);
 
-                navigate('/');
+                navigate('/dashboard');
             })
             .catch((err) => {
                 if (err.response) {
