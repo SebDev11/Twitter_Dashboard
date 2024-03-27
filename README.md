@@ -1,6 +1,6 @@
 # MERN CRUD and Authentication Project
 
-This is a project demonstrates basic CRUD operations along with user authentication using the MERN stack (MongoDB, Express.js, React.js, Node.js).
+This project demonstrates basic CRUD operations along with user authentication using the MERN stack (MongoDB, Express.js, React.js, Node.js).
 
 ## Project Structure
 
