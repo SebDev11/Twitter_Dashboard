@@ -4,14 +4,13 @@ const itemModel = require("../models/item.model");
 const addItem = async (req, res) => {
     try{
 
-        const { itemName, itemCategory, itemQty, itemDescription, user } = req.body;
+        const { itemName, itemCategory, itemQty, itemDescription } = req.body;
 
         const newItemData = {
             itemName: itemName,
             itemCategory: itemCategory,
             itemQty: itemQty,
             itemDescription: itemDescription,
-            user: user
         }
 
         const newItemObj = new itemModel(newItemData);
@@ -36,7 +35,7 @@ const getAllItems = async (req, res) => {
 
     try{
 
-        const allItems = await itemModel.find({ user: req.user.id });
+        const allItems = await itemModel.find({});
 
         return res.status(200).send({
             status: true,
@@ -99,13 +98,6 @@ const updateitem = async (req, res) => {
             return res.status(404).send({ 
                 DataNotFoundMessage: '⚠️ :: Data not found!',
             });
-        }
-
-        // Check Authorization Status
-        if (data.user.toString() !== req.user.id){
-            return res.status(403).send({
-                UnAuthMessage: '⚠️ :: Not authorized to update this data!',
-            })
         }
 
         const updateItemObj = await itemModel.findByIdAndUpdate(itemID, itemData);

@@ -9,13 +9,13 @@ const {
     deleteItem,
 } = require("../controller/item.controller");
 
-const authMiddleware = require("../middlewares/authMiddleware");
+// const authMiddleware = require("../middlewares/authMiddleware");
 
-ItemRouter.post('/create', authMiddleware, addItem);
-ItemRouter.get('/items', authMiddleware, getAllItems);
-ItemRouter.get('/item/:id', authMiddleware, getOneItem);
-ItemRouter.patch('/itemUpdate/:id', authMiddleware, updateitem);
-ItemRouter.delete('/deleteItem/:id', authMiddleware, deleteItem);
+ItemRouter.post('/create', addItem);
+ItemRouter.get('/items', getAllItems);
+ItemRouter.get('/item/:id', getOneItem);
+ItemRouter.patch('/itemUpdate/:id', updateitem);
+ItemRouter.delete('/deleteItem/:id', deleteItem);
 
 
 
