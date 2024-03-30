@@ -1,6 +1,6 @@
 # MERN CRUD and Authentication Project
 
-This is a project developed to teaching purposes for the Year 2 Semester 2 students. It demonstrates basic CRUD operations along with user authentication using the MERN stack (MongoDB, Express.js, React.js, Node.js).
+This project demonstrates basic CRUD operations along with user authentication using the MERN stack (MongoDB, Express.js, React.js, Node.js).
 
 ## Project Structure
 
@@ -25,7 +25,7 @@ Before you begin, make sure you have the following installed on your machine:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-username/MERN_CRUD_Session_Y2S2.git
+    git clone https://github.com/yasirupanduka99/MERN_CRUD_Session_Y2S2.git
     ```
 
 2. Navigate to the project directory:
