@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -11,6 +11,8 @@ const UpdateForm = () => {
     const [itemCategory, setItemCategory] = useState('');
     const [itemQty, setItemQty] = useState('');
     const [itemDescription, setItemDescription] = useState('');
+    const [uploadedFileName, setUploadedFileName] = useState(''); // State to store uploaded file name
+    const fileInputRef = useRef(null); // Create a ref for file input
 
     // using useParams we catching id from URL and asign it to id const
     const { id } = useParams();
@@ -27,6 +29,7 @@ const UpdateForm = () => {
                     setItemCategory(res.data.Item.itemCategory);
                     setItemQty(res.data.Item.itemQty);
                     setItemDescription(res.data.Item.itemDescription);
+                    setUploadedFileName(res.data.Item.itemImage); // Set the uploaded file name
                     console.log("✨ Item fetched successfuly!");
                 })
                 .catch((err) => {
@@ -48,19 +51,20 @@ const UpdateForm = () => {
 
         try{
 
-            let updateItemData = {
-                itemName: itemName,
-                itemCategory: itemCategory,
-                itemQty: itemQty,
-                itemDescription: itemDescription,
-            }
+            const formData = new FormData(); // Create FormData object to append data
+            formData.append('itemName', itemName);
+            formData.append('itemCategory', itemCategory);
+            formData.append('itemQty', itemQty);
+            formData.append('itemDescription', itemDescription);
+            // formData.append('itemImage', itemImage);
+            formData.append('itemImage', fileInputRef.current.files[0]); // Retrieve file from file input ref
     
-            axios.patch(`http://localhost:8000/api/itemUpdate/${id}`, updateItemData)
+            axios.patch(`http://localhost:8000/api/itemUpdate/${id}`, formData)
             .then((res) => {
                 alert(res.data.message);
                 console.log(res.data.status);
                 console.log(res.data.message);
-                navigate('/');
+                navigate('/allItems');
             })
             .catch((err) => {
                 console.log("☠️ :: Error on API URL or updateItemData object : " + err.message);
@@ -94,6 +98,12 @@ const UpdateForm = () => {
                 <div className="mb-3">
                     <label htmlFor="itemDescriptionID" className="form-label">Item Description</label>
                     <textarea className="form-control" id="itemDescriptionID" rows="3" onChange={(e) => setItemDescription(e.target.value)} value={itemDescription}></textarea>
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="itemItemImageID" className="form-label">Item Image</label>
+                    {/* <input type="file" accept="image/*" className="form-control" id="itemItemImageID" rows="3" onChange={(e) => setItemImage(e.target.files[0])} /> */}
+                    <input type="file" accept="image/*" className="form-control" id="itemItemImageID" rows="3" ref={fileInputRef} />
+                    {uploadedFileName && <p>Uploaded File: {uploadedFileName}</p>} {/* Display uploaded file name */}
                 </div>
                 <button type="submit" className="btn btn-primary">Update</button>
             </form>

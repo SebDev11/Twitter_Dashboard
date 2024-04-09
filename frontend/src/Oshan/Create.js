@@ -1,62 +1,59 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 
-//importing CSS files
-import './CreateForm.css'
-
-const CreateForm = () => {
+const Create = () => {
 
     const [itemName, setItemName] = useState('');
     const [itemCategory, setItemCategory] = useState('');
     const [itemQty, setItemQty] = useState('');
     const [itemDescription, setItemDescription] = useState('');
-    // const [itemImage, setItemImage] = useState(null);
-    const fileInputRef = useRef(null); // Create a ref for file input
 
-    const sendData = (e) => {
+    //implementing sendData function
+    const sendData = async (e) => {
         e.preventDefault();
 
-        const formData = new FormData(); // Create FormData object to append data
-        formData.append('itemName', itemName);
-        formData.append('itemCategory', itemCategory);
-        formData.append('itemQty', itemQty);
-        formData.append('itemDescription', itemDescription);
-        // formData.append('itemImage', itemImage);
-        formData.append('itemImage', fileInputRef.current.files[0]); // Retrieve file from file input ref
+        try {
 
-        try{
-
-            axios.post('http://localhost:8000/api/create', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+            let newItemData = {
+                itemName: itemName,
+                itemCategory: itemCategory,
+                itemQty: itemQty,
+                itemDescription: itemDescription,
+            }
+    
+            await axios.post('http://localhost:8000/api/create', newItemData)
             .then((res) => {
                 alert(res.data.message);
-                console.log(res.data.status);
+                console.log('status: ' + res.data.status);
                 console.log(res.data.message);
             })
             .catch((err) => {
-                console.log("☠️ :: Error on API URL or formData object : " + err.message);
+                if(err.response){
+                    console.log(err.response.data.message);
+                }else {
+                    console.log("Error occurred while processing your axios post request. " + err.message);
+                }
             })
     
-            //set State back to first state
+            //set state back to first state
             setItemName('');
             setItemCategory('');
             setItemQty('');
             setItemDescription('');
-            // setItemImage(null);
 
-            // Clear file input by replacing it with a new one
-            fileInputRef.current.value = '';
-
-        }catch(err){
-            console.log("☠️ :: sendData Function failed! ERROR : " + err.message);
+        } catch(err) {
+            console.log('sendData function failed! ERROR: ' + err.message);
         }
+
     }
+
 
   return (
 
     <div className="createFormContainer">
         
         <div className="formBootstrap">
-            <h2 className="mb-4">Add Items Form</h2>
+            <h2 className="mb-4">Oshan Add Items Form</h2>
 
             <form onSubmit={sendData}>
                 <div className="form-group mb-3">
@@ -75,11 +72,6 @@ const CreateForm = () => {
                     <label htmlFor="itemDescriptionID" className="form-label">Item Description</label>
                     <textarea className="form-control" id="itemDescriptionID" rows="3" onChange={(e) => setItemDescription(e.target.value)} value={itemDescription}></textarea>
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="itemItemImageID" className="form-label">Item Image</label>
-                    {/* <input type="file" accept="image/*" className="form-control" id="itemItemImageID" rows="3" onChange={(e) => setItemImage(e.target.files[0])} /> */}
-                    <input type="file" accept="image/*" className="form-control" id="itemItemImageID" rows="3" ref={fileInputRef} />
-                </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
 
@@ -87,8 +79,7 @@ const CreateForm = () => {
 
     </div>
 
-  )
-
+    )
 };
 
-export default CreateForm;
+export default Create;

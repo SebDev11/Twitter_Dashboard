@@ -21,7 +21,11 @@ const itemSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-}, {timestamps: true})
+    itemImage: {
+        type: String,
+        required: true,
+    },
+}, {collection: 'itemPodiEwn', timestamps: true})
 
 const itemModel = mongoose.model('items', itemSchema);
 module.exports = itemModel;

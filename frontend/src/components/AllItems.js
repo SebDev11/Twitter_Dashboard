@@ -43,7 +43,7 @@ const AllItems = () => {
     }, []) //The empty dependency array ([]) as the second argument to useEffect indicates that this effect should only run once when the component mounts.
 
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id, imageName) => {
 
         try{
 
@@ -57,6 +57,15 @@ const AllItems = () => {
                 })
                 .catch((err) => {
                     console.log('☠️ :: Error on API URL : ' + err.message);
+                })
+
+                // Now, delete the associated image
+                await axios.delete(`http://localhost:8000/api/deleteImage/${imageName}`) // Assuming this is your endpoint for deleting images
+                .then((res) => {
+                    console.log('✅ :: Image deleted successfully');
+                })
+                .catch((err) => {
+                    console.log('☠️ :: Image deleted failed!');
                 })
             } else {
                 toast.warning('Deletion cancelled!');
@@ -84,7 +93,8 @@ const AllItems = () => {
             <thead>
                 <tr>
                     <th scope="col">No</th>
-                    <th scope="col">id</th>
+                    {/* <th scope="col">id</th> */}
+                    <th scope="col">Item Image</th>
                     <th scope="col">Item Name</th>
                     <th scope="col">Item Category</th>
                     <th scope="col">Item Qty</th>
@@ -93,10 +103,18 @@ const AllItems = () => {
                 </tr>
             </thead>
             <tbody>
-                {allItems.map((items, index) => (
+                {allItems == null ? "" : allItems.map((items, index) => (
                     <tr key={items._id}>
                         <td>{index + 1}</td>
-                        <td>{items._id}</td>
+                        {/* <td>{items._id}</td> */}
+                        <td>
+                            <img 
+                                src={require(`../uploads/${items.itemImage}`)}
+                                width={30}
+                                height={40}
+                                alt="ItemImage" 
+                            />
+                        </td>
                         <td>{items.itemName}</td>
                         <td>{items.itemCategory}</td>
                         <td>{items.itemQty}</td>
