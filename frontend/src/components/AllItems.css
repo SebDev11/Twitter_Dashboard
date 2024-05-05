@@ -1,3 +1,4 @@
+/* table css */
 .addItemBtnDiv{
     background-color: none; 
 }
@@ -7,4 +8,48 @@
     margin-top: 30px;
     margin-bottom: 30px;
     margin-left: 20px;
+}
+
+/* search css */
+.tableHead{
+    background-color: red;
+    display: grid;
+    grid-template-columns: 10% auto auto;
+    margin-bottom: 20px;
+}
+
+.searchTable{
+    height: 40px;
+}
+
+.searchTable input[type=text]{
+    width: 40%;
+    height: inherit;
+    border: none;
+    border-radius: 5px;
+    font-family: "Open Sans";
+}
+
+.searchTable button{
+    height: inherit;
+    width: 60px;
+    margin-left: 10px;
+    background-color: #000000;
+    border: none;
+    border-radius: 5px;
+}
+
+.searchTable button:hover{
+    background-color: #ffffff;
+    transition: background-color 0.5s ease;
+    cursor: pointer;
+}
+
+.searchTable button:hover i{
+    color: #000000!important;
+    transition: color 0.5s ease;
+}
+
+.searchString{
+    color: #ffc107!important;
 }

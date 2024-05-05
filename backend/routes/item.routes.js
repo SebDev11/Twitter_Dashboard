@@ -1,9 +1,6 @@
 const express = require("express");
 const ItemRouter = express.Router();
 
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' }) //define the destination where are the image will be uploaded.
-
 
 const {
     addItem,
@@ -12,6 +9,8 @@ const {
     updateitem,
     deleteItem,
     deleteImgFromLocalStorage,
+    searchItem,
+    generateInvoice,
 } = require("../controller/item.controller");
 
 // const authMiddleware = require("../middlewares/authMiddleware");
@@ -20,9 +19,11 @@ const AllRoutes = (upload) => {
     ItemRouter.post('/create', upload.single("itemImage"), addItem);
     ItemRouter.get('/items', getAllItems);
     ItemRouter.get('/item/:id', getOneItem);
+    ItemRouter.get('/searchItem', searchItem);
     ItemRouter.patch('/itemUpdate/:id', upload.single("itemImage"), updateitem);
     ItemRouter.delete('/deleteItem/:id', deleteItem);
     ItemRouter.delete('/deleteImage/:imagename', deleteImgFromLocalStorage);
+    ItemRouter.get('/generate-invoice', generateInvoice);
 
     return ItemRouter;
 }

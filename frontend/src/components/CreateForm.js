@@ -8,6 +8,7 @@ const CreateForm = () => {
 
     const [itemName, setItemName] = useState('');
     const [itemCategory, setItemCategory] = useState('');
+    const [itemPrice, setItemPrice] = useState('');
     const [itemQty, setItemQty] = useState('');
     const [itemDescription, setItemDescription] = useState('');
     // const [itemImage, setItemImage] = useState(null);
@@ -19,6 +20,7 @@ const CreateForm = () => {
         const formData = new FormData(); // Create FormData object to append data
         formData.append('itemName', itemName);
         formData.append('itemCategory', itemCategory);
+        formData.append('itemPrice', itemPrice);
         formData.append('itemQty', itemQty);
         formData.append('itemDescription', itemDescription);
         // formData.append('itemImage', itemImage);
@@ -39,6 +41,7 @@ const CreateForm = () => {
             //set State back to first state
             setItemName('');
             setItemCategory('');
+            setItemPrice('');
             setItemQty('');
             setItemDescription('');
             // setItemImage(null);
@@ -66,6 +69,10 @@ const CreateForm = () => {
                 <div className="form-group mb-3">
                     <label htmlFor="itemCategoryID">Item Category</label>
                     <input type="text" className="form-control" id="itemCategoryID" placeholder="Enter Item Category" onChange={(e) => setItemCategory(e.target.value)} value={itemCategory}/>
+                </div>
+                <div className="form-group mb-3">
+                    <label htmlFor="itemPriceID">Item Price</label>
+                    <input type="number" className="form-control" id="itemPriceID" placeholder="Enter Item Price" onChange={(e) => setItemPrice(e.target.value)} value={itemPrice}/>
                 </div>
                 <div className="form-group mb-3">
                     <label htmlFor="itemQtyID">Item Qty</label>

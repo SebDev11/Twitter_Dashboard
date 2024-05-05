@@ -5,9 +5,13 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 require("dotenv").config();
 const app = express();
+const path = require('path');
 
 //MongoDB Connection
 const { ConnectDB } = require("./utils/connection");
+
+// Serve static files from the 'docs' directory
+app.use('/docs', express.static(path.join(__dirname, 'docs')));
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -28,9 +32,11 @@ const upload = multer({ storage: storage })
 
 //routes
 const AllRoutes = require('./routes/item.routes');
+const OrderRouter = require('./routes/order.routes');
 const AuthRouter = require('./routes/auth.routes');
 
 app.use('/api/', AllRoutes(upload));
+app.use('/order/', OrderRouter);
 app.use('/api/auth/', AuthRouter);
 
 const PORT = process.env.PORT || 8070;

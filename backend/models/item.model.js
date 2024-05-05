@@ -11,6 +11,11 @@ const itemSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
+    itemPrice: {
+        type: Number,
+        required: true,
+        trim: true,
+    },
     itemQty: {
         type: Number,
         required: true,
@@ -23,7 +28,6 @@ const itemSchema = new mongoose.Schema({
     },
     itemImage: {
         type: String,
-        required: true,
     },
 }, {collection: 'itemPodiEwn', timestamps: true})
 
