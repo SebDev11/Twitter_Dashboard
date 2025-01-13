@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   background-color: #f1f1f1;
   margin: 0;
@@ -20,4 +24,12 @@ code {
 
 .smallError{
   color: red!important;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Safari/Chrome */
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;      /* Firefox */
 }

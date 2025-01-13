@@ -12,7 +12,7 @@ const ConnectDB = () => {
             console.log(`☠️ :: Error on mongoDb URL : ${err.message}`)
         })
 
-    }catch(err){
+    } catch(err) {
         console.log(`☠️ :: Error on mongoDb connect : ${err.message}`)
     }
 

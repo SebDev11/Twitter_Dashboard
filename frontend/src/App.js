@@ -13,8 +13,9 @@ import SideNavPanel from './components/SideNavPanel';
 import OrderForm from './components/order/OrderForm';
 import AllOrders from './components/order/AllOrders';
 import DownloadInvoice from './components/DownloadInvoice';
-// import Register from './auth/Register';
-// import Login from './auth/Login';
+import Register from './auth/Register';
+import Login from './auth/Login';
+// import { useNavigate } from 'react-router-dom';
 
 
 function App() {
@@ -39,7 +40,6 @@ function AppContent() {
       return showNavBarRoutes.includes(location.pathname);
     };
 
-
   return (
 
     <div className="App">
@@ -50,8 +50,8 @@ function AppContent() {
       <div className='pages'>
         <Routes>
 
-          {/* <Route exact path="/register" element={<Register />} />
-          <Route exact path="/" element={<Login />} /> */}
+          <Route exact path="/register" element={<Register />} />
+          <Route exact path="/login" element={<Login />} />
 
           {/* <Route path='/createform' element={<Create  />} /> */}
           <Route path='/createform' element={<CreateForm  />} />
