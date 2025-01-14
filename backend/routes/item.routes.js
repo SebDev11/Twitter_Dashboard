@@ -11,21 +11,21 @@ const {
     deleteImgFromLocalStorage,
     searchItem,
     generateInvoice,
+    addComment,
 } = require("../controller/item.controller");
 
 // const authMiddleware = require("../middlewares/authMiddleware");
 
 const AllRoutes = (upload) => {
-    // ItemRouter.post('/item/create', upload.single("itemImage"), addItem);
-    ItemRouter.post('/item/create', addItem);
+    ItemRouter.post('/create', upload.single("file"), addItem);
     ItemRouter.get('/items', getAllItems);
     ItemRouter.get('/item/:id', getOneItem);
     ItemRouter.get('/searchItem', searchItem);
-    ItemRouter.patch('/itemUpdate/:id', upload.single("itemImage"), updateitem);
+    ItemRouter.patch('/itemUpdate/:id', upload.single("file"), updateitem);
     ItemRouter.delete('/deleteItem/:id', deleteItem);
     ItemRouter.delete('/deleteImage/:imagename', deleteImgFromLocalStorage);
     ItemRouter.get('/generate-invoice', generateInvoice);
-
+    ItemRouter.post('/comment/:id', addComment);
     return ItemRouter;
 }
 

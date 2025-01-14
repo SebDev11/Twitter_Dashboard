@@ -12,14 +12,6 @@ function Home(){
           <Sidebar isSidebarOpen={isSidebarOpen} />
           <MainContent setIsSidebarOpen={setIsSidebarOpen} />
           <SearchBar />
-          {/* <div className="grid grid-cols-7">
-            <div className="col-span-7 lg:col-span-5">
-              <MainContent />
-            </div>
-            <div className="lg:col-span-2">
-              <SearchBar />
-            </div>
-          </div> */}
         </div>
     );
 };

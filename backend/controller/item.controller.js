@@ -1,4 +1,5 @@
 const itemModel = require("../models/item.model");
+const commentModel = require("../models/comment.model")
 const pdfCreator = require('pdf-creator-node');
 const fs = require('fs'); //Use Node.js's fs module to delete the file from the filesystem.
 const path = require('path');
@@ -6,21 +7,18 @@ const moment = require("moment"); //Use for format date and time
 
 //Add/Create item router controller
 const addItem = async (req, res) => {
-    console.log(req.body)
     try{
-
-        const { userId, item, itemImage } = req.body;
-
+        const { userId, item } = req.body;
+        
         // Check if file exists in the request
-        // if (!req.file) {
-        //     return res.status(400).send({
-        //         status: false,
-        //         message: 'No file uploaded.'
-        //     });
-        // }
+        if (!req.file) {
+            return res.status(400).send({
+                status: false,
+                message: 'No file uploaded.'
+            });
+        }
 
-        // const itemImage = req.file.filename; // Extract the filename from the uploaded file
-
+        const itemImage = `${req.file.filename}`; // Extract the filename from the uploaded file
         const newItemData = {
             item: item,
             itemImage: itemImage,
@@ -29,12 +27,26 @@ const addItem = async (req, res) => {
 
         const newItem = new itemModel(newItemData);
         await newItem.save();
-        const allItems = await itemModel.find({});
-
+        const allItems = await itemModel.aggregate([
+            {
+                $lookup: {
+                    from: 'users', // Ensure the collection name is correct
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $sort: {
+                    updatedAt: -1
+                }
+            }
+        ])
+        
         return res.status(200).send({
             status: true,
             message: "✨ :: Data saved successfuly!",
-            data: allItems
+            allItems: allItems
         })
 
     }catch(err){
@@ -45,12 +57,66 @@ const addItem = async (req, res) => {
     }
 }
 
+const addComment = async (req, res) => {
+    
+    try {
+        const { userId, comment } = req.body;
+        const itemId = req.params.id.replace(/^:/, ''); 
+        if(!comment) {
+            return res.status(400).send({
+                status: false,
+                message: 'No Comment Added.'
+            });
+        } 
+        const newCommentData = {
+            comment: comment,
+            userId: userId,
+            itemId: itemId
+        }
+        const newComment = new commentModel(newCommentData);
+        await newComment.save();
+        return res.status(200).send({
+            status: true,
+            message: "✨ :: Comment Saved Successfully",
+            newComment: newComment,
+        })
+
+    } catch(err) {
+        return res.status(500).send({
+            status: false,
+            message: err.message,
+        })
+    }
+}
+
 //get all item router controller
 const getAllItems = async (req, res) => {
 
     try{
 
-        const allItems = await itemModel.find({});
+        const allItems = await itemModel.aggregate([
+            {
+                $lookup: {
+                    from: 'users', // Ensure the collection name is correct
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'user'
+                },  
+            },
+            {
+                $lookup: {
+                    from: 'comments',
+                    localField: '_id',
+                    foreignField: 'itemId',
+                    as: 'comments'
+                }
+            },
+            {
+                $sort: {
+                    updatedAt: -1
+                }
+            },
+        ]);
 
         return res.status(200).send({
             status: true,
@@ -275,8 +341,6 @@ const deleteImgFromLocalStorage = async (req, res) => {
         const imagename = req.params.filename;
         const filePath = path.join(frontendUploadsDirectory, imagename);
 
-        console.log(filePath);
-
         // Check if file exists
         if (fs.existsSync(filePath)) {
             // Delete file
@@ -317,4 +381,5 @@ module.exports = {
     deleteItem,
     deleteImgFromLocalStorage,
     generateInvoice,
+    addComment,
 }

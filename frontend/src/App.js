@@ -8,6 +8,13 @@ import UpdateForm from './components/UpdateForm';
 // import Create from './Oshan/Create';
 // import Update from './Oshan/Update';
 import Home from './components/Home';
+import Explore from './components/explore';
+import Notifications from './components/notifications';
+import Messages from './components/messages';
+import Lists from './components/lists';
+import Profile from './components/profile';
+import Bookmarks from './components/bookmarks';
+import More from './components/more';
 import Payment from './Chethmi/Client/Payment';
 import SideNavPanel from './components/SideNavPanel';
 import OrderForm from './components/order/OrderForm';
@@ -55,25 +62,16 @@ function AppContent() {
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/login" element={<Login />} />
 
-          {/* <Route path='/createform' element={<Create  />} /> */}
-          <Route path='/createform' element={<CreateForm  />} />
-          {/* <Route path='/updateform/:id' element={<Update />} /> */}
-          <Route path='/updateform/:id' element={<UpdateForm  />} />
-          {/* <Route path='/view' element={<View />} /> */}
-          <Route path='/allItems' element={<AllItems />} />
-          <Route path='/payment/:id' element={<Payment />} />
           <Route path='/' element={<Home />} />
-
-          <Route path='/downloadInvoice' element={<DownloadInvoice />} />
-
-
-          <Route path='/ordercreate' element={<OrderForm />} />
-          <Route path='/allorders' element={<AllOrders />} />
-
+          <Route path='/explore' element={<Explore />} />
+          <Route path='/notifications' element={<Notifications />} />
+          <Route path='/messages' element={<Messages />} />
+          <Route path='/bookmarks' element={<Bookmarks />} />
+          <Route path='/lists' element={<Lists />} /> */
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/more' element={<More />} />
         </Routes>
       </div>
-        
-
     </div>
   );
 }

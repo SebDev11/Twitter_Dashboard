@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import SidebarItem from "./sidebarItem";
 import { UserContext } from "../../provider/userProvider";
 import { useNavigate } from "react-router-dom";
+import { navLinks } from "../../constant/constant";
 
 function Sidebar({isSidebarOpen}){
     const authData = useContext(UserContext);
@@ -20,14 +21,18 @@ function Sidebar({isSidebarOpen}){
                             <img src={'./image/Logo.png'} />
                         </div>
                     </div>
-                    <SidebarItem title={'Home'} src={'./image/home.png'} style={"text-[#1DA1F2]"} />
-                    <SidebarItem title={'Explore'} src={'./image/explore.png'} />
-                    <SidebarItem title={'Notifications'} src={'./image/notification.png'} />
-                    <SidebarItem title={'Messages'} src={'./image/message.png'} />
-                    <SidebarItem title={'Bookmarks'} src={'./image/bookmark.png'} />
-                    <SidebarItem title={'Lists'} src={'./image/lists.png'} />
-                    <SidebarItem title={'Profile'} src={'./image/profile.png'} />
-                    <SidebarItem title={'More'} src={'./image/more.png'} />
+                    <div>
+                    {navLinks.map((item) => (
+                        <SidebarItem
+                            key={item.id}
+                            id={item.id}
+                            title={item.title}
+                            url={item.url}
+                            src={item.icon}
+                            style={item.style}
+                        />
+                    ))}
+                    </div>
                     <div className="mt-[15px] h-[49px] w-[229px] rounded-full bg-[#1DA1F2] items-center flex justify-center text-[15px] font-normal text-white">Tweet</div>
                 </div>
                 <div className='flex justify-between px-2.5 h-[69px] items-center' onClick={handleLogout}>

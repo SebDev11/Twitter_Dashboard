@@ -7,11 +7,10 @@ import { UserContext } from "../../provider/userProvider";
 function MainContent({setIsSidebarOpen}) {
 
     const [ item, setItem ] = useState('');
-    const [ file, setFile ] = useState(null)
-    const [ uploading, setUploading ] = useState(false);
-    const [ filePreview, setFilePreview ] = useState(null);
-    const [fileUrl, setFileUrl] = useState(null)
-    const [  data, setData ] = useState('');
+    const [ file, setFile ] = useState(null);
+    const [ allData, setAllData ] = useState('');
+    const [ showBar, setShowBar ] = useState(false);
+    const [ comment, setComment ] = useState('');
     const user = useContext(UserContext);
     const newItemData = {
         item: item,
@@ -20,8 +19,8 @@ function MainContent({setIsSidebarOpen}) {
     useEffect(() => {
         const getAllItems = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/items', formData);
-                setData(response.allItems)
+                const response = await axios.get('http://localhost:8000/api/items');
+                setAllData(response.data.allItems)
             } catch(err) {
                 console.log(err.message)
             }
@@ -29,18 +28,43 @@ function MainContent({setIsSidebarOpen}) {
         getAllItems()
     }, [])
     const fileInputRef = useRef(null)
+    
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0])
+    }
     const formData = new FormData();
     formData.append('file', file);  // Append the file to FormData
     formData.append('item', newItemData.item);
     formData.append('userId', newItemData.userId)
-    console.log(file)
 
     const handleFromSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/item/create', formData);
-            setData(response.data);
-            
+            const response = await axios.post('http://localhost:8000/api/create', formData);
+            setAllData(response.data.allItems);   
+        } catch(err) {
+            console.log(err.message)
+        }
+    }
+
+    const newCommentData = {
+        comment: comment,
+        userId: user.user && user.user._id,
+    }
+
+    const handleCommentSubmit = async (e, id) => {
+        e.preventDefault();
+        
+        try {
+            const response = await axios.post(`http://localhost:8000/api/comment/:${id}`, newCommentData);
+            setAllData((prevAllData) => 
+                prevAllData.map((item) =>   
+                    item._id == response.data.newComment.itemId ? {
+                        ...item,
+                        comments: [...item.comments, response.data.newComment]
+                    } : item
+                )
+            )
         } catch(err) {
             console.log(err.message)
         }
@@ -49,7 +73,6 @@ function MainContent({setIsSidebarOpen}) {
     const handleImageClick = () => {
         fileInputRef.current.click()
     }
-
     return (
         <div className="h-screen w-full border !border-[#3A444C] overflow-y-auto no-scrollbar">
             <motion.div
@@ -83,7 +106,7 @@ function MainContent({setIsSidebarOpen}) {
                                     type="file"
                                     ref={fileInputRef}
                                     style={{ display: 'none' }}
-                                    onChange={(e) => setFile(e.target.files[0])}
+                                    onChange={handleFileChange}
                                     accept="image/*" // Restrict file type to images
                                 />
                                 <img src="./image/gif.png" className="h-6 w-6 ml-3" />
@@ -101,65 +124,57 @@ function MainContent({setIsSidebarOpen}) {
                     </form>
                 </motion.div>
                 <div className="h-[9px] bg-[#1C2733] border !border-[#3A444C]"></div>
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="py-2.5 px-[15px] border !border-[#3A444C]"
-                >
-                    <div className="">
-                        <div className="flex">
-                            <img className='w-[49px] h-[49px]' src="./image/devon.png" alt='' />
-                            <div className="ml-2.5 grow">
-                                <p className='font-normal text-[15px] text-white'>Devon Lane <span className="text-[#8899A6]">@marcelosalomao·23s</span></p>
-                                <p className='font-normal text-[15px] text-white'>Is this big enough for you?</p>
-                                <div className="py-2.5">
-                                    <img src="./image/placeholder.png" className="w-full" />
-                                </div>
-                                <div className="grid grid-cols-4 gap-4 py-1 font-normal text-[13px] text-[#8899A6]">
-                                    <div className="flex">
-                                        <img src="./image/comment.png" className="w-[18px] h-[18px]" />
-                                        <p className="ml-2.5">61</p>
+                {allData && allData.map((data) => (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="py-2.5 px-[15px] border !border-[#3A444C]"
+                        key={data._id}
+                    >
+                        <div className="">
+                            <div className="flex">
+                                <img className='w-[49px] h-[49px]' src="./image/devon.png" alt='' />
+                                <div className="ml-2.5 grow">
+                                    <p className='font-normal text-[15px] text-white'>{data.user[0].username} <span className="text-[#8899A6]">@{data.user[0].email.split('@')[0]}·23s</span></p>
+                                    <p className='font-normal text-[15px] text-white'>{data.item}</p>
+                                    <div className="py-2.5">
+                                        <img src={`./uploads/${data.itemImage}`} alt="ItemImage" className="w-full" />
                                     </div>
-                                    <div className="flex">
-                                        <img src="./image/retweet.png" className="w-[18px] h-[18px]" />
-                                        <p className="ml-2.5">12</p>
-                                    </div>
-                                    <div className="flex">
-                                        <img src="./image/like.png" className="w-[18px] h-[18px]" />
-                                        <p className="ml-2.5 text-[#F4245E]">6.2K</p>
-                                    </div>
-                                    <div className="flex">
-                                        <img src="./image/share.png" className="w-[18px] h-[18px]" />
-                                        <p className="ml-2.5">61</p>
-                                    </div>
-                                </div>
-                                <div className="py-2.5 text-[13px] font-normal text-[#1DA1F2]">Show this thread</div> 
-                            </div> 
-                            
-                        </div>        
-                            
-                    </div>
-                </motion.div>
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="py-2.5 px-[15px] border !border-[#3A444C]"
-                >
-                    <div className="">
-                        <div className="flex flex-row">
-                            <img className='w-[49px] h-[49px]' src="./image/esther.png" alt='' />
-                            <div className="ml-2.5 grow">
-                                <p className='font-normal text-[15px] text-white'>Esther Howard <span className="text-[#8899A6]">@andrebiachi·23s</span></p>
-                                <p className='font-normal text-[15px] text-white'>Are you ready for your big date?</p>
-                                <div className="py-2.5">
-                                    <img src="./image/esther_image.png" className="w-full" />
-                                </div>
-                            </div> 
-                            
-                        </div>        
-                            
-                    </div>
-                </motion.div>
+                                    <div className="grid grid-cols-4 gap-4 py-1 font-normal text-[13px] text-[#8899A6]">
+                                        <div className="flex" onClick={() => {user.user && user.user._id !== data.userId && setShowBar(data._id)}}>
+                                            <img src="./image/comment.png" className="w-[18px] h-[18px]" />
+                                            <p className="ml-2.5">{data.comments.length}</p>
+                                        </div>
+                                        <div className="flex">
+                                            <img src="./image/retweet.png" className="w-[18px] h-[18px]" />
+                                            <p className="ml-2.5">12</p>
+                                        </div>
+                                        <div className="flex">
+                                            <img src="./image/like.png" className="w-[18px] h-[18px]" />
+                                            <p className="ml-2.5 text-[#F4245E]">6.2K</p>
+                                        </div>
+                                        <div className="flex">
+                                            <img src="./image/share.png" className="w-[18px] h-[18px]" />
+                                            <p className="ml-2.5">61</p>
+                                        </div>
+                                    </div>                
+                                    {showBar == data._id && 
+                                        <form onSubmit={(e) => handleCommentSubmit(e, data._id)} className="flex justify-between">
+                                            <input type='text' onChange={(e) => setComment(e.target.value)} placeholder="Input Comment" className="grow mt-3 text-xl p-1 bg-[#3A444C] text-[#8899A6]"></input>
+                                            <button type="submit" className="ml-4 w-[79px] h-[39px] bg-[#1DA1F2] rounded-full mt-3 text-[15px] font-normal flex items-center justify-center text-white">Submit</button>
+                                        </form>
+                                    }
+                                    {data.comments && data.comments.sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0,3).map((comment) =>(
+                                        <div key={comment._id} className="py-2.5 text-[13px] font-normal text-[#8899A6]">{comment.comment}</div>
+                                    ))}
+                                    <div className="py-2.5 text-[13px] font-normal text-[#1DA1F2]">Show this thread</div> 
+                                </div> 
+                                
+                            </div>        
+                                
+                        </div>
+                    </motion.div>
+                ))}
             </div>
             
         </div>

@@ -4,7 +4,6 @@ const UserModel = require('../models/user.model');
 
 //Register | Create User Router controller
 const RegisterUser = async (req, res) => {
-    console.log(req.body)
     try{
         const { email, username, password } = req.body;
         // Check if user already exists
@@ -113,7 +112,6 @@ const LoginUser = async (req, res) => {
 }
 
 const GetUser = async(req, res) => {
-    console.log(req.user);
     try {
         const user = await UserModel.findById(req.user.id).select('-password');
         if(!user) {

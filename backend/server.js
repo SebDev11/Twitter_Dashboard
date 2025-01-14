@@ -20,7 +20,7 @@ app.use(cors());
 //Multer disk Storage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, '../frontend/src/uploads/') // Destination directory for uploaded files
+      cb(null, '../frontend/public/uploads/') // Destination directory for uploaded files
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now() //creating unique file name in here with adding date and time now
@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
     }
 })
   
-const upload = multer({ storage: storage })
+const upload = multer({ storage })
 
 //routes
 const AllRoutes = require('./routes/item.routes');
