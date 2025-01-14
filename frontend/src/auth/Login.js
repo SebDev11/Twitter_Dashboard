@@ -20,34 +20,16 @@ const Login = ({ setToken }) => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
+        
         try{
-
-            await axios.post('http://localhost:8000/api/auth/login', UserData)
-            .then(async (res) => {
-                await setToken(res.data.token);
-                alert(res.data.message);
-                console.log(res.data);
-                console.log(res.data.message);
-
-                navigate('/dashboard');
-            })
-            .catch((err) => {
-                if (err.response) {
-                    // Server responded with an error status code
-                    setEmailError(err.response.data.messageEmail);
-                    setPasswordError(err.response.data.messagePw);
-                } else {
-                    // Network error or other issues
-                    console.log("☠️ :: Error on API URL or newUserData object : " + err.message);
-                }
-            })
-
-        }catch(err){
+            const response = await axios.post('http://localhost:8000/api/auth/login', UserData);
+            localStorage.setItem('token', response.data.token);
+            navigate('/');
+            window.location.reload();
+        } catch(err) {
             console.log("☠️ :: onSubmit Function failed! ERROR : " + err.message);
             setErrorMessage("An error occurred. Please try again later.");
         }
-
     }
 
   return (
@@ -70,6 +52,7 @@ const Login = ({ setToken }) => {
                     <small id="otherErrorsID" class="form-text text-muted smallError">{error}</small>
                 </div>
                 <button type="submit" className="btn btn-warning">Login</button>
+                {/* <button type="submit" className="btn btn-warning">Register</button> */}
             </form>
         </div>
 

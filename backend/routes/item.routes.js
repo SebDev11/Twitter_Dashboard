@@ -16,7 +16,8 @@ const {
 // const authMiddleware = require("../middlewares/authMiddleware");
 
 const AllRoutes = (upload) => {
-    ItemRouter.post('/create', upload.single("itemImage"), addItem);
+    // ItemRouter.post('/item/create', upload.single("itemImage"), addItem);
+    ItemRouter.post('/item/create', addItem);
     ItemRouter.get('/items', getAllItems);
     ItemRouter.get('/item/:id', getOneItem);
     ItemRouter.get('/searchItem', searchItem);

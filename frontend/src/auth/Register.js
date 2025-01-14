@@ -10,44 +10,35 @@ const Register = ({ setToken }) => {
     const navigate = useNavigate(); //Initialize navigate function.
 
     const [ email, setEmail ] = useState('');
+    const [ name, setName ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ confirmPassword, setConfirmPassword ] = useState('');
 
     const [ emailError, setEmailError ] = useState('');
+    const [ usernameError, setUsernameError ] = useState('');
     const [ passwordError, setPasswordError ] = useState('');
     const [ error, setError ] = useState('');
 
     let newUserData = {
         email: email,
+        username: name,
         password: password
     }
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
         if(password !== confirmPassword){
             setError("🧐 Password do not match!");
             return;
         }
-
         try{
-
-            await axios.post('http://localhost:8000/api/auth/register', newUserData)
-            .then(async (res) => {
-                await setToken(res.data.token)
-                alert(res.data.message);
-                console.log(res.data);
-
-                navigate('/dashboard');
-            })
-            .catch((err) => {
-                console.log("☠️ :: Error on API URL or newUserData object : " + err.message);
-            })
-
-        }catch(err){
+            const response = await axios.post('http://localhost:8000/api/auth/register', newUserData)
+            localStorage.setItem('token', response.data.token)
+            navigate('/')
+            window.location.reload();
+        } catch(err) {
             console.log(err.message);
         }
-
     }
 
   return (
@@ -62,6 +53,11 @@ const Register = ({ setToken }) => {
                     <label htmlFor="emailID">Email</label>
                     <input type="email" className="form-control" id="emailID" placeholder="Email address" onChange={(e) => setEmail(e.target.value)} value={email}/>
                     <small id="emailErrorsID" className="form-text text-muted smallError">{emailError}</small>
+                </div>
+                <div className="form-group mb-3">
+                    <label htmlFor="usernameID">UserName</label>
+                    <input type="text" className="form-control" id="usernameID" placeholder="UserName" onChange={(e) => setName(e.target.value)} value={name}/>
+                    <small id="usernameErrorsID" className="form-text text-muted smallError">{usernameError}</small>
                 </div>
                 <div className="form-group mb-3">
                     <label htmlFor="passwordID">Password</label>

@@ -1,6 +1,6 @@
 import {BrowserRouter, Routes, Route, useLocation} from 'react-router-dom'
-import React from 'react';
-
+import React, { useState, useEffect, createContext } from 'react';
+import axios from 'axios';
 import CreateForm from './components/CreateForm';
 import AllItems from './components/AllItems';
 import UpdateForm from './components/UpdateForm';
@@ -15,14 +15,16 @@ import AllOrders from './components/order/AllOrders';
 import DownloadInvoice from './components/DownloadInvoice';
 import Register from './auth/Register';
 import Login from './auth/Login';
+import UserProvider from './provider/userProvider';
 // import { useNavigate } from 'react-router-dom';
-
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <AppContent />
+        <UserProvider>
+          <AppContent />
+        </UserProvider>
       </BrowserRouter>
     </div>
   );

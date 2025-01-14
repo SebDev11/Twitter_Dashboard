@@ -6,35 +6,35 @@ const moment = require("moment"); //Use for format date and time
 
 //Add/Create item router controller
 const addItem = async (req, res) => {
+    console.log(req.body)
     try{
 
-        const { itemName, itemCategory, itemPrice, itemQty, itemDescription } = req.body;
+        const { userId, item, itemImage } = req.body;
 
         // Check if file exists in the request
-        if (!req.file) {
-            return res.status(400).send({
-                status: false,
-                message: 'No file uploaded.'
-            });
-        }
+        // if (!req.file) {
+        //     return res.status(400).send({
+        //         status: false,
+        //         message: 'No file uploaded.'
+        //     });
+        // }
 
-        const itemImage = req.file.filename; // Extract the filename from the uploaded file
+        // const itemImage = req.file.filename; // Extract the filename from the uploaded file
 
         const newItemData = {
-            itemName: itemName,
-            itemCategory: itemCategory,
-            itemPrice: itemPrice,
-            itemQty: itemQty,
-            itemDescription: itemDescription,
+            item: item,
             itemImage: itemImage,
+            userId: userId
         }
 
-        const newItemObj = new itemModel(newItemData);
-        await newItemObj.save();
+        const newItem = new itemModel(newItemData);
+        await newItem.save();
+        const allItems = await itemModel.find({});
 
         return res.status(200).send({
             status: true,
-            message: "✨ :: Data saved successfuly!"
+            message: "✨ :: Data saved successfuly!",
+            data: allItems
         })
 
     }catch(err){
@@ -55,7 +55,7 @@ const getAllItems = async (req, res) => {
         return res.status(200).send({
             status: true,
             message: "✨ :: All items are fetched!",
-            AllItems: allItems,
+            allItems: allItems,
         })
 
     }catch(err){

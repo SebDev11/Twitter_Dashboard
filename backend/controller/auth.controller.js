@@ -4,11 +4,9 @@ const UserModel = require('../models/user.model');
 
 //Register | Create User Router controller
 const RegisterUser = async (req, res) => {
-
+    console.log(req.body)
     try{
-
-        const { email, password } = req.body;
-
+        const { email, username, password } = req.body;
         // Check if user already exists
         let user =  await UserModel.findOne({email});
         if(user){
@@ -19,25 +17,26 @@ const RegisterUser = async (req, res) => {
 
         const newUserData = {
             email: email,
+            username: username,
             password: password,
         }
 
         // Create new user
-        user = new UserModel(newUserData);
+        newUser = new UserModel(newUserData);
 
         // Hash password
         const salt = await bcrypt.genSalt(10);
         console.log("🔑 :: Generated Salt: ", salt);
-        user.password = await bcrypt.hash(password, salt);
-        console.log("👁️ :: Hashed Password: ", user.password);
+        newUser.password = await bcrypt.hash(password, salt);
+        console.log("👁️ :: Hashed Password: ", newUser.password);
 
         // User save to DB
-        await user.save();
+        await newUser.save();
 
         // Generate JWT
         const payload = {
             user: {
-                id: user._id
+                id: newUser._id
             }
         };
 
@@ -48,6 +47,7 @@ const RegisterUser = async (req, res) => {
             // Send token in response upon successful registration
             res.status(200).json({
                 status: true,
+                user: { id: newUser._id, username: newUser.username, email: newUser.email },
                 token: token,
                 message: "✨ :: User registered successfully!",
             });
@@ -98,11 +98,12 @@ const LoginUser = async (req, res) => {
             }
             return res.json({
                 token: token,
+                user: { id: user._id, username: user.username, email: user.email },
                 message: "🔓 :: Access Granted!"
             })
         })
 
-    }catch(err){
+    } catch(err) {
         return res.status(500).send({
             status: false,
             message: "☠️ :: Server Error: " + err.message,
@@ -111,8 +112,21 @@ const LoginUser = async (req, res) => {
 
 }
 
+const GetUser = async(req, res) => {
+    console.log(req.user);
+    try {
+        const user = await UserModel.findById(req.user.id).select('-password');
+        if(!user) {
+            return res.statue(404).json({msg: 'User not found'})
+        }
+        res.json({user})
+    } catch(err) {
+        res.status(500).json({msg: 'Server error'})
+    }
+}
 
 module.exports = {
     RegisterUser,
     LoginUser,
+    GetUser,
 }
