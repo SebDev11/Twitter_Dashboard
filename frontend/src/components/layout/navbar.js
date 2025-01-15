@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { motion } from 'framer-motion';
 
-function Navbar({pageTitle, setIsSidebarOpen}) {
-
+function Navbar({pageTitle, setIsSidebarOpen, item}) {
     return (
         <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -27,18 +26,22 @@ function Navbar({pageTitle, setIsSidebarOpen}) {
                 transition={{ delay: 0.2 }}
                 className='w-full flex justify-between'
             >
-                <div className='flex gap-2 items-center'>
-                    {pageTitle && (
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.3, delay: 0.2 }}
-                            className={`font-lufga text-white`}
-                        >
-                            {pageTitle}
-                        </motion.div>
-                    )}
-                </div>
+                <div className="flex">
+                    <img src='./image/arrow.png' className="w-6 h-6 mt-1"></img>
+                    <div className='flex items-center ml-6'>
+                        {pageTitle && (
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.3, delay: 0.2 }}
+                                className={`font-lufga text-white`}
+                            >
+                                {pageTitle}
+                            </motion.div>
+                        )}
+                    </div>
+                    {/* <div className="text-[#8899A6] text-[13px]">6 Tweets</div> */}
+                </div> 
                 <img src="./image/topTweet.png" className="w-6 h-6" />
             </motion.div>
         </motion.div>

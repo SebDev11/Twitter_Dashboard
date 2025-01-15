@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 
-function SidebarItem({title, url, src, style}) {
+function SidebarItem({title, url, src, style, item}) {
     const navigate = useNavigate()
-    const [ item, setItem ] = useState('')
     return (
-        <div className={`pl-2.5 items-center h-[60px] flex`} onClick={() => {
+        <div className={`pl-2.5 cursor-pointer items-center h-[60px] flex`} onClick={() => {
             navigate(url)
-            setItem(title)
         }}>
             <div className={`w-[30px] h-[30px] items-center flex justify-center ${item == title ? "text-[#1DA1F2]" : ''}`}>
                 <img src={src} />
@@ -17,4 +15,4 @@ function SidebarItem({title, url, src, style}) {
     )
 }
 
-export default SidebarItem
+export default SidebarItem;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import SidebarItem from "./sidebarItem";
 import { UserContext } from "../../provider/userProvider";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { navLinks } from "../../constant/constant";
 
 function Sidebar({isSidebarOpen}){
     const authData = useContext(UserContext);
+    const [ itemState, setItemState ] = useState('')
     const navigate = useNavigate()
     const handleLogout = () => {
         localStorage.removeItem('token')
@@ -30,6 +31,8 @@ function Sidebar({isSidebarOpen}){
                             url={item.url}
                             src={item.icon}
                             style={item.style}
+                            item={itemState}
+                            onClick={() => setItemState(item.title)}
                         />
                     ))}
                     </div>

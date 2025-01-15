@@ -33,7 +33,7 @@ function SearchBar() {
                     <div className="font-normal w-2/3">
                         <p className="text-[14px] text-[#8899A6]">US news · 4h ago</p>
                         <p className="text-[15px] text-white my-1.5">Parler may go offline following suspensions by Amazon, Apple and Google</p>
-                        <p className="text-[14px] text-[#8899A6]">Trending with <span className="text-[#1DA1F2]">#trump</span> </p>
+                        <p className="text-[14px] text-[#8899A6]">Trending with <span className="text-[#1DA1F2]">#thunder</span> </p>
                     </div>
                     <img src="./image/news.png" className="w-[71px] h-[69px] rounded-xl" />
                 </div>  
