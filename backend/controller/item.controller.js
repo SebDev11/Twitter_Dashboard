@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const itemModel = require("../models/item.model");
 const commentModel = require("../models/comment.model")
 const pdfCreator = require('pdf-creator-node');
@@ -82,6 +84,56 @@ const addComment = async (req, res) => {
         })
 
     } catch(err) {
+        return res.status(500).send({
+            status: false,
+            message: err.message,
+        })
+    }
+}
+
+const getUserItem = async(req, res) => {
+    userId = req.params.id;
+    
+    try{
+        if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).send({ error: 'Invalid or missing userId' });
+        }
+        const userItems = await itemModel.aggregate([
+            {
+                $match: {
+                    userId: userId
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users', // Ensure the collection name is correct
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'user'
+                },  
+            },
+            {
+                $lookup: {
+                    from: 'comments',
+                    localField: '_id',
+                    foreignField: 'itemId',
+                    as: 'comments'
+                }
+            },
+            {
+                $sort: {
+                    updatedAt: -1
+                }
+            },
+        ]);
+
+        return res.status(200).send({
+            status: true,
+            message: "✨ :: Authed user items are fetched!",
+            items: userItems,
+        })
+
+    }catch(err){
         return res.status(500).send({
             status: false,
             message: err.message,
@@ -382,4 +434,5 @@ module.exports = {
     deleteImgFromLocalStorage,
     generateInvoice,
     addComment,
+    getUserItem,
 }
