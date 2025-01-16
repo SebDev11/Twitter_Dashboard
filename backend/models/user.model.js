@@ -11,6 +11,14 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    location: {
+        type: String,
+        unique: true,
+    },
+    job: {
+        type: String,
+        unique: true,
+    },
     password: {
         type: String,
         required: true

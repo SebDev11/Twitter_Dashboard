@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const itemModel = require("../models/item.model");
+const userModel = require("../models/user.model")
 const commentModel = require("../models/comment.model")
 const pdfCreator = require('pdf-creator-node');
 const fs = require('fs'); //Use Node.js's fs module to delete the file from the filesystem.
@@ -63,7 +64,7 @@ const addComment = async (req, res) => {
     
     try {
         const { userId, comment } = req.body;
-        const itemId = req.params.id.replace(/^:/, ''); 
+        const itemId = req.params.id; 
         if(!comment) {
             return res.status(400).send({
                 status: false,
@@ -93,15 +94,11 @@ const addComment = async (req, res) => {
 
 const getUserItem = async(req, res) => {
     userId = req.params.id;
-    
     try{
-        if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-            return res.status(400).send({ error: 'Invalid or missing userId' });
-        }
         const userItems = await itemModel.aggregate([
             {
                 $match: {
-                    userId: userId
+                    userId: mongoose.Types.ObjectId.createFromHexString(userId)
                 }
             },
             {
@@ -183,6 +180,34 @@ const getAllItems = async (req, res) => {
         })
     }
 
+}
+
+const updateUserProfile = async (req, res) => {
+    
+    try {
+        const userId = req.params.id
+        const { username, job, location, email } = req.body;
+        console.log(username)
+        const userData = {
+            username: username,
+            job: job,
+            location: location,
+            email: email,
+        }     
+        // console.log(userData)
+        const user = await userModel.findByIdAndUpdate(userId, userData);
+        const newUser = await userModel.findById(userId);
+        return res.status(200).send({
+            status: true,
+            message: "✨ :: User Updated!",
+            user: newUser,
+        })
+    } catch(err) {
+        return res.status(500).send({
+            status: false,
+            message: err.message,
+        })
+    }
 }
 
 //get one-specified item router controller
@@ -435,4 +460,5 @@ module.exports = {
     generateInvoice,
     addComment,
     getUserItem,
+    updateUserProfile
 }

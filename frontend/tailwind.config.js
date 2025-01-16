@@ -7,7 +7,11 @@ module.exports = {
     extend: {
       width: {
         '550': '550px',  // Add 500px width
+        'custom': '100vw'
       },
+      height: {
+        'custom': '100vh'
+      }
     },
   },
   plugins: [],

@@ -56,7 +56,7 @@ function MainContent({setIsSidebarOpen}) {
         e.preventDefault();
         
         try {
-            const response = await axios.post(`http://localhost:8000/api/comment/:${id}`, newCommentData);
+            const response = await axios.post(`http://localhost:8000/api/comment/${id}`, newCommentData);
             setAllData((prevAllData) => 
                 prevAllData.map((item) =>   
                     item._id == response.data.newComment.itemId ? {

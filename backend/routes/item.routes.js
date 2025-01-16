@@ -13,6 +13,7 @@ const {
     generateInvoice,
     addComment,
     getUserItem,
+    updateUserProfile
 } = require("../controller/item.controller");
 
 // const authMiddleware = require("../middlewares/authMiddleware");
@@ -28,6 +29,7 @@ const AllRoutes = (upload) => {
     ItemRouter.delete('/deleteImage/:imagename', deleteImgFromLocalStorage);
     ItemRouter.get('/generate-invoice', generateInvoice);
     ItemRouter.post('/comment/:id', addComment);
+    ItemRouter.patch('/:id', updateUserProfile);
     return ItemRouter;
 }
 
